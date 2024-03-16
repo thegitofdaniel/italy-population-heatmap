@@ -1,6 +1,7 @@
 coverage
 ipykernel
 ipywidgets
+italy-geopop
 matplotlib
 numpy-financial
 pandas
