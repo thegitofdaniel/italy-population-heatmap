@@ -1,11 +1,17 @@
+contextily
 coverage
+folium
+geodatasets
 ipykernel
 ipywidgets
 italy-geopop
+mapclassify
+mapclassify
 matplotlib
 numpy-financial
 pandas
 pandas-stubs
+plotly
 pre-commit
 pyarrow
 pydantic
@@ -13,6 +19,3 @@ pytest
 ruff
 tqdm
 types-python-dateutil
-plotly
-geodatasets
-contextily
