@@ -6,8 +6,6 @@ matplotlib
 numpy-financial
 pandas
 pandas-stubs
-pdm
-pdm-publish
 pre-commit
 pyarrow
 pydantic
@@ -15,3 +13,6 @@ pytest
 ruff
 tqdm
 types-python-dateutil
+plotly
+geodatasets
+contextily
