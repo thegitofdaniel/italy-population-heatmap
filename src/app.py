@@ -1,28 +1,35 @@
-import streamlit as st
-from maps.maps import Plotter
-from maps.utils import DataQuery, south_italy
 import folium
+import streamlit as st
 import streamlit.components.v1 as components
-
-gdf = DataQuery(regions=south_italy).get_municipality_data()
-plotter = Plotter(gdf=gdf)
-
+from maps.maps import Plotter
+from maps.utils import DataQuery, north_italy, south_italy
 
 st.set_page_config(layout="wide")
 
-st.title("Italian Municipalities with Pension Benefits for Expats")
+st.title("Italian Municipalities with Pension Tax Benefits for Expats")
 
-st.sidebar.title('Options')
+st.sidebar.title("Settings")
 
-tax_benefit_only = st.sidebar.checkbox('Only municipalities with tax benefit?')
+south_only = st.sidebar.checkbox("Only municipalities in the South")
 
-if tax_benefit_only:
-    st.write('Showing only municipalities with tax benefit.')
+tax_benefit_only = st.sidebar.checkbox(
+    "Highlight municipalities with Pension Tax Benefit"
+)
+
+if south_only:
+    regions = south_italy
 else:
-    st.write('Showing all municipalities.')
+    regions = north_italy + south_italy
 
-with st.spinner('Loading map...'):
-    m = plotter.explore_plot()
+gdf = DataQuery(level="municipality").filter(regions=regions)
+plotter = Plotter(gdf=gdf)
+
+# dq.gdf["region", "province", "municipality", "geometry", "population", "eligible_for_pension_benefit"]
+with st.spinner("Loading map..."):
+    if tax_benefit_only:
+        m = plotter.explore_plot()
+    else:
+        m = plotter.explore_plot_without_highlight()
     fig = folium.Figure().add_child(m).render()
-    print(type(fig))
+
     components.html(fig, height=800)
