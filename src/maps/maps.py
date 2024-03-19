@@ -3,11 +3,8 @@ import os
 import folium
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from italy_geopop.pandas_extension import pandas_activate
 from matplotlib.colors import ListedColormap
 from pydantic import BaseModel
-
-pandas_activate(include_geometry=True, data_year=2022)
 
 
 class Plotter(BaseModel):
@@ -48,6 +45,11 @@ class Plotter(BaseModel):
             cmap=ListedColormap(["red", "green"]),
             m=m,
         )
+        return m
+
+    def explore_plot_without_highlight(self):
+        m = folium.Map(location=[42, 10], zoom_start=6, tiles="OpenStreetMap")
+        self.gdf.explore(m=m)
         return m
 
     def save_explore_plot(self, path="../images/explore_plot.html"):
