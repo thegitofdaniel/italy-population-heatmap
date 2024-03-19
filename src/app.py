@@ -6,14 +6,14 @@ from maps.utils import DataQuery, north_italy, south_italy
 
 st.set_page_config(layout="wide")
 
-st.title("Italian Municipalities with Pension Tax Benefits for Expats")
+st.title("Italian Municipalities with Pension Benefits")
 
 st.sidebar.title("Settings")
 
 south_only = st.sidebar.checkbox("Only municipalities in the South")
 
 tax_benefit_only = st.sidebar.checkbox(
-    "Highlight municipalities with Pension Tax Benefit"
+    "Highlight municipalities with Pension Benefits"
 )
 
 if south_only:
