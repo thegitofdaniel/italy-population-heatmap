@@ -1,20 +1,10 @@
 import geopandas as gpd
+import italy_geopop
 import pandas as pd
+from italy_geopop.pandas_extension import pandas_activate
+from pydantic import BaseModel
 
-
-def get_codes_from_page(page):
-    array = page["municipalities"]
-    codes = [a["municipality_code"] for a in array]
-    return codes
-
-
-def get_codes_from_provinces(provinces):
-    all_codes = []
-    for province in provinces:
-        for page in province:
-            codes = get_codes_from_page(page)
-            all_codes.extend(codes)
-    return all_codes
+pandas_activate(include_geometry=True, data_year=2022)
 
 
 north_italy = [
@@ -46,25 +36,66 @@ south_italy = [
 italy = south_italy + north_italy
 
 
-class DataQuery:
-    def __init__(self, level="provinces", regions=italy):
-        if level == "provinces":
-            codes = self._get_province_codes(regions=regions)
-            self.codes = codes
+from pydantic import field_validator, model_validator
 
-    def _get_province_codes(self, regions):
-        region_data = pd.Series(regions).italy_geopop.from_region()
-        codes = get_codes_from_provinces(provinces=region_data["provinces"])
-        return codes
 
-    def get_municipality_data(self):
-        data = pd.Series(self.codes)
-        geodata = data.italy_geopop.from_municipality(population_limits="total")
+class DataQuery(BaseModel):
+    level: str
+    gdf: gpd.GeoDataFrame = None
+    units: list[str] = None
 
-        geodata = geodata[
-            ["municipality_code", "municipality", "geometry", "population"]
-        ]
-        geodata["eligible_for_pension_benefit"] = geodata["population"] < 20000
+    @field_validator("level")
+    def check_level(cls, v):  # noqa
+        if v not in ("region", "province", "municipality"):
+            raise ValueError(
+                'level must be one of "region", "province", or "municipality"'
+            )
+        return v
 
-        gdf = gpd.GeoDataFrame(geodata)
+    @model_validator(mode="after")
+    def set_geodata(self):
+        level = self.level
+        units = self.units
+        geopop = italy_geopop.geopop.Geopop()
+
+        if level == "region":
+            if units is None:
+                units = geopop.italy_regions.region.tolist()
+            data = pd.Series(units)
+            geodata = data.italy_geopop.from_region()
+
+        elif level == "province":
+            if units is None:
+                units = geopop.italy_provinces.province.tolist()
+            data = pd.Series(units)
+            geodata = data.italy_geopop.from_province()
+
+        else:
+            if units is None:
+                units = geopop.italy_municipalities.municipality.tolist()
+            data = pd.Series(units)
+            geodata = data.italy_geopop.from_municipality(population_limits="total")
+            geodata["eligible_for_pension_benefit"] = (
+                geodata["population"] < 20000
+            ) & (geodata["region"].isin(south_italy))
+
+        self.units = units
+        self.gdf = gpd.GeoDataFrame(geodata)
+
+    def filter(
+        self,
+        regions: list[str] = [""],
+        provinces: list[str] = [""],
+        municipalities: list[str] = [""],
+    ):
+        gdf = self.gdf.copy()
+        if regions != [""]:
+            gdf = gdf[gdf["region"].isin(regions)]
+        if provinces != [""]:
+            gdf = gdf[gdf["province"].isin(provinces)]
+        if municipalities != [""]:
+            gdf = gdf[gdf["municipality"].isin(municipalities)]
         return gdf
+
+    class Config:
+        arbitrary_types_allowed = True
