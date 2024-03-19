@@ -43,22 +43,22 @@ south_italy = [
     "Sardegna",
 ]
 
+italy = south_italy + north_italy
+
 
 class DataQuery:
-    def __init__(self):
-        pass
+    def __init__(self, level="provinces", regions=italy):
+        if level == "provinces":
+            codes = self._get_province_codes(regions=regions)
+            self.codes = codes
 
-    def get_province_codes(self, regions):
+    def _get_province_codes(self, regions):
         region_data = pd.Series(regions).italy_geopop.from_region()
-
-        codes = get_codes_from_provinces(region_data["provinces"])
-
+        codes = get_codes_from_provinces(provinces=region_data["provinces"])
         return codes
 
-    def get_municipality_data(self, regions):
-        codes = self.get_province_codes(regions)
-
-        data = pd.Series(codes)
+    def get_municipality_data(self):
+        data = pd.Series(self.codes)
         geodata = data.italy_geopop.from_municipality(population_limits="total")
 
         geodata = geodata[
