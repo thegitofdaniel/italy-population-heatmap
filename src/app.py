@@ -12,9 +12,7 @@ st.sidebar.title("Settings")
 
 south_only = st.sidebar.checkbox("Only municipalities in the South")
 
-tax_benefit_only = st.sidebar.checkbox(
-    "Highlight municipalities with Pension Benefits"
-)
+tax_benefit_only = st.sidebar.checkbox("Highlight municipalities with Pension Benefits")
 
 if south_only:
     regions = south_italy
@@ -24,7 +22,6 @@ else:
 gdf = DataQuery(level="municipality").filter(regions=regions)
 plotter = Plotter(gdf=gdf)
 
-# dq.gdf["region", "province", "municipality", "geometry", "population", "eligible_for_pension_benefit"]
 with st.spinner("Loading map..."):
     if tax_benefit_only:
         m = plotter.explore_plot()
@@ -32,4 +29,4 @@ with st.spinner("Loading map..."):
         m = plotter.explore_plot_without_highlight()
     fig = folium.Figure().add_child(m).render()
 
-    components.html(fig, height=800)
+    components.html(fig, height=600)
