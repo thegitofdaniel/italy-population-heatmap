@@ -2,27 +2,31 @@ import geopandas as gpd
 import italy_geopop
 from pydantic import BaseModel, field_validator, model_validator
 
-north_italy = ['Emilia-Romagna',
- 'Friuli-Venezia Giulia',
- 'Lazio',
- 'Liguria',
- 'Lombardia',
- 'Marche',
- 'Piemonte',
- 'Toscana',
- 'Trentino-Alto Adige/Südtirol',
- 'Umbria',
- "Valle d'Aosta/Vallée d'Aoste",
- 'Veneto']
+north_italy = [
+    "Emilia-Romagna",
+    "Friuli-Venezia Giulia",
+    "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Toscana",
+    "Trentino-Alto Adige/Südtirol",
+    "Umbria",
+    "Valle d'Aosta/Vallée d'Aoste",
+    "Veneto",
+]
 
-south_italy = ['Abruzzo',
- 'Basilicata',
- 'Calabria',
- 'Campania',
- 'Molise',
- 'Puglia',
- 'Sardegna',
- 'Sicilia']
+south_italy = [
+    "Abruzzo",
+    "Basilicata",
+    "Calabria",
+    "Campania",
+    "Molise",
+    "Puglia",
+    "Sardegna",
+    "Sicilia",
+]
 
 
 class DataQuery(BaseModel):
