@@ -3,29 +3,29 @@ import italy_geopop
 from pydantic import BaseModel, field_validator, model_validator
 
 north_italy = [
-    "Valle d'Aosta",
-    "Piemonte",
-    "Lombardia",
-    "Trentino-Alto Adige",
-    "Veneto",
-    "Friuli-Venezia Giulia",
-    "Liguria",
     "Emilia-Romagna",
-    "Toscana",
-    "Umbria",
-    "Marche",
+    "Friuli-Venezia Giulia",
     "Lazio",
+    "Liguria",
+    "Lombardia",
+    "Marche",
+    "Piemonte",
+    "Toscana",
+    "Trentino-Alto Adige/Südtirol",
+    "Umbria",
+    "Valle d'Aosta/Vallée d'Aoste",
+    "Veneto",
 ]
 
 south_italy = [
     "Abruzzo",
-    "Molise",
-    "Campania",
-    "Puglia",
     "Basilicata",
     "Calabria",
-    "Sicilia",
+    "Campania",
+    "Molise",
+    "Puglia",
     "Sardegna",
+    "Sicilia",
 ]
 
 

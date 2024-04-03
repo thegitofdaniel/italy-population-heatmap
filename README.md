@@ -14,8 +14,6 @@ The definition of `South Italy` has been made ad hoc, and it includes only the r
 With `GitHub Codespace`, the environment should have all requirements already installed.
 
 ## Usage
-### Notebooks Demos
-[Please check the notebooks folder](notebooks/) for demos of how to use this package.
 
 ## Deployment
 
